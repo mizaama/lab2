@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Погода в реальном времени</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #eaf7ff; /* Нежно-голубой фон */
+            color: #333;
+        }
+        h1 {
+            margin-top: 20px;
+            font-size: 2.5em;
+        }
+        #weather {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Текущая погода</h1>
+    <div id="weather">Загрузка погоды...</div>
+
+    <script>
+        // Ваш API-ключ
+        const apiKey = '60935b6bf602fba7e1201f9df1e152b4';
+
+        // Функция для получения данных о погоде
+        function getWeather() {
+            // Получение геолокации пользователя
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    // URL для получения данных о погоде
+                    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ru`;
+
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.cod === 200) {
+                                const temp = data.main.temp;
+                                const description = data.weather[0].description;
+                                const city = data.name;
+
+                                document.getElementById('weather').innerHTML = `
+                                    В городе <strong>${city}</strong>:<br>
+                                    ${temp}°C, ${description}
+                                `;
+                            } else {
+                                document.getElementById('weather').innerHTML = `
+                                    <span class="error">Не удалось получить данные о погоде.</span>
+                                `;
+                            }
+                        })
+                        .catch(() => {
+                            document.getElementById('weather').innerHTML = `
+                                <span class="error">Произошла ошибка при запросе данных.</span>
+                            `;
+                        });
+                }, () => {
+                    document.getElementById('weather').innerHTML = `
+                        <span class="error">Не удалось определить ваше местоположение.</span>
+                    `;
+                });
+            } else {
+                document.getElementById('weather').innerHTML = `
+                    <span class="error">Геолокация не поддерживается вашим устройством.</span>
+                `;
+            }
+        }
+
+        // Запуск функции
+        getWeather();
+    </script>
+</body>
+</html>
