@@ -22,13 +22,13 @@
             margin-top: 20px;
         }
         .error {
-            color: red;
+            color: rgb(255, 0, 157);
             font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <h1>Текущая погода</h1>
+    <h1>Текущая погодаaaaaa</h1>
     <div id="weather">Загрузка погоды...</div>
 
     <script>
@@ -66,7 +66,7 @@
                         })
                         .catch(() => {
                             document.getElementById('weather').innerHTML = `
-                                <span class="error">Произошла ошибка при запросе данных.</span>
+                                <span class="error">Произошла ошибкочка при запросе данных.</span>
                             `;
                         });
                 }, () => {
